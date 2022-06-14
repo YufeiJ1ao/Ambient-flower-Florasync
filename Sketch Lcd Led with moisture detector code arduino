@@ -1,0 +1,136 @@
+//Physical computing code
+//contain reference from electronicGURU in CircuitsArduino
+//https://www.instructables.com/Arduino-Ws2812-LED-or-Neopixel-Led-Strip-or-Ring-T/
+//contain reference from  TejaswaniVerma in CircuitsArduino
+//https://www.instructables.com/Ambient-Flower/
+
+
+int sensorValue = 0; // variable to store the value coming from the sensor
+#include <Adafruit_NeoPixel.h>//LED ring light liberary
+#include <Servo.h>// servo
+#define SERVOPIN 3// define servo pin
+
+#ifdef __AVR__
+#include <avr/power.h> // Required for 16 MHz Adafruit Trinket
+#endif
+#include <Wire.h>
+#include <LCD.h>
+#include<LiquidCrystal_I2C.h>// LCD liberary
+//Create object named lcd of the class LiquidCrystal/
+LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7); //For 4-bit mode /
+//#define sensor 8
+#define sensorPower 8
+#define sensorPin  A0
+#define PIN        6
+#define NUMPIXELS 16
+#define THIRSTY_VAL 20
+#define COMFORTABLE_VAL 500
+#define TOOMUCH_VAL 700
+Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
+#define DELAYVAL 500
+
+Servo myServo;
+int lastSensorValue;
+//int pos = 0;
+
+int angle = 30;
+
+//LiquidCrystal lcd(8,9,10, 2, 3, 4, 5, 10,11,12,13); /* For 8-bit mode */
+float moisturePercentage;
+
+
+
+void setup()
+{
+#if defined(__AVR_ATtiny85__) && (F_CPU == 16000000)
+  clock_prescale_set(clock_div_1);
+#endif
+
+  pixels.begin();
+  pixels.setBrightness(34);
+  lcd.begin(20, 4);
+  lcd.setBacklightPin(3, POSITIVE);
+
+  lcd.setCursor(2, 0);
+  lcd.print("Arduino Point");
+  lcd.setCursor(2, 1);
+  lcd.setBacklight(HIGH);
+  lcd.print("Soil Moisture");
+  myServo.attach(SERVOPIN);
+
+  pinMode(sensorPower, OUTPUT);
+  digitalWrite(sensorPower, LOW);
+  delay(2000);
+  lcd.clear();
+  // Begin serial communication at a baud rate of 9600:
+  Serial.begin(9600);
+}
+void loop()
+{
+  // Get a reading from the Moisture sensor:
+  pixels.clear();
+  for (int i = 0; i < NUMPIXELS; i++) { // For each pixel...
+    sensorValue = analogRead(sensorPin);
+    sensorValue = 1023 - sensorValue;
+
+    /*------Display Moisture Sensor Value in Serial Monitor------*/
+    Serial.print("Moisture Sensor Value:");
+    Serial.println(sensorValue);
+
+    //Display the Moisture Percentage
+    moisturePercentage = ((sensorValue / 1240.00) * 100.00);
+    Serial.print("Moisture Percentage = ");
+    Serial.print(moisturePercentage);
+    Serial.print("%\n");
+
+    //Display the plant need
+    if (sensorValue < 50) {
+      angle = constrain(sensorValue, 0, 180);
+      myServo.write(angle);
+
+      Serial.println("I am thirsty, please give me water");
+      pixels.setPixelColor(i, pixels.Color(247, 8, 179));
+      lcd.print("I am thirsty, please give me water");
+      pixels.show();
+
+
+    }
+    else if (sensorValue > 300 && sensorValue < 700) {
+
+      Serial.println("I feel so comfortable");
+      lcd.print("I feel so comfortable");
+      pixels.setPixelColor(i, pixels.Color(3, 252, 161));
+      pixels.show();
+    }
+    if (sensorValue > 700) {
+
+      Serial.println("Too much water, I might get hurt");
+      lcd.print("Too much water, I might get hurt");
+      pixels.setPixelColor(i, pixels.Color(7, 3, 252));
+      pixels.show();
+      delay(1000);
+    }
+
+    Serial.print("\n");
+
+    //coordinate of the text showing on the lCD
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Soil Moisture");
+
+    lcd.setCursor(0, 1);
+    lcd.print(sensorValue);
+    lcd.setCursor(6, 1);
+    lcd.print("&");
+    lcd.setCursor(9, 1);
+    lcd.print(moisturePercentage);
+    lcd.print(" %");
+    delay(700);
+    delay(DELAYVAL); // Pause before next pass through loop
+  }
+
+
+
+  delay(50);
+
+}
