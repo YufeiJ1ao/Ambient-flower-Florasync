@@ -6,4 +6,4 @@ A moisture detection devices mimic the shape of a living organism,  adorned
 with LED lights and a responsive pistil, signal plant hydration needs. 
 ###
 These devices strategically placed in cities, aim to foster a two-way communication channel
-between humans and nature. ![image](https://github.com/euphiefurry/Ambient-flower-Adonis/assets/93790647/acecd98a-5ed5-4faf-bbe0-a19fd613c343)
+between humans and nature.
