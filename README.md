@@ -1,5 +1,9 @@
-# Ambient-flower-Adonis
-//An arduino practical of Ambient flower. The input is moisture level of the soil, output is the colour of the LED ring light.// 
-Colour menu: Magenta means soil are dry, aqua means soil are at the perfect moisture level. Blue means there are too much water. //
-The led ring light lights up depend on the time delay, 1 single led light bulb lights up each second 
-therefore if the soil moisture level changes rapidly so as the led light. If the moisture level becomes too dramatic you may see three different color on the same ring light. This machine are able to accurately display the moisture level of soil with different colour overtime.
+### Ambient-flower-Adonis
+###
+###
+This project is a combination of nature and technology for sustainable urban living. 
+A moisture detection devices mimic the shape of a living organism,  adorned 
+with LED lights and a responsive pistil, signal plant hydration needs. 
+###
+These devices strategically placed in cities, aim to foster a two-way communication channel
+between humans and nature. ![image](https://github.com/euphiefurry/Ambient-flower-Adonis/assets/93790647/acecd98a-5ed5-4faf-bbe0-a19fd613c343)
